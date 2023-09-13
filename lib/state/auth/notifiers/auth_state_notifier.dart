@@ -6,7 +6,7 @@ import 'package:instantgram_clone/state/posts/typedefs/user_id.dart';
 import 'package:instantgram_clone/state/user_info/backend/user_info_storage.dart';
 
 class AuthStateNotifier extends StateNotifier<AuthState> {
-  final _authenticator = Authenticator();
+  final _authenticator = const Authenticator();
   final _userInfoStorage = const UserInfoStorage();
 
   AuthStateNotifier() : super(const AuthState.unknown()) {

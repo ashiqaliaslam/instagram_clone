@@ -28,8 +28,14 @@ class AuthState {
   @override
   bool operator ==(covariant AuthState other) =>
       identical(this, other) ||
-      (result == other.result && userId == other.userId);
+      (result == other.result &&
+          isLoading == other.isLoading &&
+          userId == other.userId);
 
   @override
-  int get hashCode => Object.hash(result, isLoading, userId);
+  int get hashCode => Object.hash(
+        result,
+        isLoading,
+        userId,
+      );
 }

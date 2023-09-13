@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:instantgram_clone/main.dart';
+import 'package:instantgram_clone/extensions/object/log.dart';
 import 'package:instantgram_clone/state/auth/providers/auth_state_provider.dart';
 import 'package:instantgram_clone/views/constants/app_colors.dart';
 import 'package:instantgram_clone/views/constants/strings.dart';

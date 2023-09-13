@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'
+    show Widget, BuildContext, Column, SizedBox, Divider, StatelessWidget;
 
 class DividerWithMargins extends StatelessWidget {
   const DividerWithMargins({super.key});

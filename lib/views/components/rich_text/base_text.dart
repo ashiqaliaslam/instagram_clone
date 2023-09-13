@@ -6,7 +6,6 @@ import 'package:instantgram_clone/views/components/rich_text/link_text.dart';
 class BaseText {
   final String text;
   final TextStyle? style;
-
   const BaseText({
     required this.text,
     this.style,
@@ -16,7 +15,10 @@ class BaseText {
     required String text,
     TextStyle? style = const TextStyle(),
   }) =>
-      BaseText(text: text, style: style);
+      BaseText(
+        text: text,
+        style: style,
+      );
 
   factory BaseText.link({
     required String text,

@@ -1,62 +1,56 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:instantgram_clone/firebase_options.dart';
-
-import 'dart:developer' as devtools show log;
-
-import 'package:instantgram_clone/state/auth/providers/auth_state_provider.dart';
 import 'package:instantgram_clone/state/auth/providers/is_logged_in_provider.dart';
-import 'package:instantgram_clone/state/providers/is_loading_provider.dart';
-import 'package:instantgram_clone/views/components/animations/data_not_found_animation_view.dart';
-import 'package:instantgram_clone/views/components/animations/empty_contents_animation_view.dart';
-import 'package:instantgram_clone/views/components/animations/error_animation_view.dart';
-import 'package:instantgram_clone/views/components/animations/loading_animation_view.dart';
-import 'package:instantgram_clone/views/components/animations/small_error_animation.dart';
-import 'package:instantgram_clone/views/components/loading/loading_screen.dart';
-import 'package:instantgram_clone/views/login/login_view.dart';
 
-extension Log on Object {
-  void log() => devtools.log(toString());
-}
+import 'firebase_options.dart';
+import 'state/providers/is_loading_provider.dart';
+import 'views/components/loading/loading_screen.dart';
+import 'views/login/login_view.dart';
+import 'views/main/main_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(
-    const ProviderScope(
-      child: MyApp(),
-    ),
+    const ProviderScope(child: App()),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends ConsumerWidget {
+  const App({
+    Key? key,
+  }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // calculate widget to show
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      darkTheme: ThemeData.dark(useMaterial3: true),
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.blueGrey,
+        indicatorColor: Colors.blueGrey,
       ),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        primarySwatch: Colors.blue,
+      ),
+      themeMode: ThemeMode.dark,
+      debugShowCheckedModeBanner: false,
       home: Consumer(
         builder: (context, ref, child) {
-          // loading screen
-          ref.listen<bool>(isLoadingProvider, (_, isLoading) {
-            if (isLoading) {
-              LoadingScreen.instance().show(context: context);
-            } else {
-              LoadingScreen.instance().hide();
-            }
-          });
+          // install the loading screen
+          ref.listen<bool>(
+            isLoadingProvider,
+            (_, isLoading) {
+              if (isLoading) {
+                LoadingScreen.instance().show(context: context);
+              } else {
+                LoadingScreen.instance().hide();
+              }
+            },
+          );
           final isLoggedIn = ref.watch(isLoggedInProvider);
-          isLoggedIn.log();
           if (isLoggedIn) {
             return const MainView();
           } else {
@@ -67,64 +61,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// for when you are already logged in
-class MainView extends StatelessWidget {
-  const MainView({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('Main View'),
-      ),
-      body: Consumer(
-        builder: (context, ref, child) {
-          return TextButton(
-            onPressed: () async {
-              await ref.read(authStateProvider.notifier).logOut();
-            },
-            child: const Text('Logout'),
-          );
-        },
-      ),
-    );
-  }
-}
-
-// // for when you are not logged in
-// class LoginView extends ConsumerWidget {
-//   const LoginView({
-//     super.key,
-//   });
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Login View'),
-//       ),
-//       body: Column(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: <Widget>[
-//           TextButton(
-//             onPressed: () async {
-//               'Sign in with Google Pressed'.log();
-//               ref.read(authStateProvider.notifier).loginWithGoogle();
-//               // final result = await Authenticator().loginWithGoogle();
-//               // result.log();
-//             },
-//             child: const Text('Sign In with Google'),
-//           ),
-//           TextButton(
-//             onPressed: () {
-//               'Sign in with Facebook Pressed'.log();
-//             },
-//             child: const Text('Sign In with Facebook'),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
